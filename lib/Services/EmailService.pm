@@ -7,11 +7,19 @@ use strict;
 use Services::ApiHelper;
 use Data::Message;
 use JSON;
-use chilkat();
+use Config::General;
+
+my $conf = Config::General->new(
+    -ConfigFile => 'config.cfg',
+    -InterPolateVars => 1
+);
+
+my %config = $conf->getall;
 
 my $baseURL = "https://api.paubox.net:443/v1/";
-my $apiKey = "your-api-key";
-my $apiUser = "your-api-user";
+my $apiKey = $config{'apiKey'};
+my $apiUser = $config{'apiUsername'};
+
 
 sub getEmailDisposition {   
     my ($sourceTrackingId) = @_;        
@@ -25,20 +33,12 @@ sub sendMessage {
     my ($msgObj) = @_;        
     my $authHeader =  _getAuthHeader() ;
     my $apiUrl = "/messages";    
-
-    
-
     # my $JSON = JSON->new->utf8;
     # $JSON->convert_blessed(1);
-
     # my $reqBody = $JSON->encode($msgObj);
 
     my $reqBody = getJSON($msgObj);
-
-    my $sbReq = chilkat::CkStringBuilder->new();
-    $reqBody->EmitSb($sbReq);
-
-    print $reqBody;
+    
     my $response = Services::ApiHelper::callToAPIByPost($baseURL.$apiUser, $apiUrl, $authHeader,$reqBody);
     print $response;
 }
@@ -50,21 +50,27 @@ sub _getAuthHeader {
 sub getJSON {
     
     my ($msg) = @_;    
-    
 
-my $json = chilkat::CkJsonObject->new();
-$json->UpdateString("data.message.recipients",$msg->{'to'});
-$json->UpdateString("data.message.bcc",$msg->{'bcc'});
-$json->UpdateString("data.message.headers.subject",$msg->{'subject'});
-$json->UpdateString("data.message.headers.from",$msg->{'from'});
-# $json->UpdateString("data.message.headers.reply-to",'Sender Name <sender@authorized_domain.com>');
-# $json->UpdateBool("data.message.allowNonTLS",0);
-# $json->UpdateString("data.message.content.text/plain","Hello World!");
-# $json->UpdateString("data.message.content.text/html","<html><body><h1>Hello World!</h1></body></html>");
-# $json->UpdateString("data.message.attachments[0].fileName","hello_world.txt");
-# $json->UpdateString("data.message.attachments[0].contentType","text/plain");
-# $json->UpdateString("data.message.attachments[0].content","SGVsbG8gV29ybGQh\n");
-return $json;
+    my %reqObject = (
+    data => {
+        message => {
+            recipients => $msg->{'to'},
+            headers => {
+                subject => $msg->{'subject'},
+                from => $msg->{'from'},
+                'reply-to' => $msg->{'replyTo'}
+            },
+            allowNonTLS => $msg->{'allowNonTLS'},
+            content => {
+                'text/plain' => $msg->{'plaintext'}
+            },
+            attachments => $msg->{'attachments'},
+        },
+        
+    }           
+    );
+    
+    return encode_json (\%reqObject);    
 }
 
 1;

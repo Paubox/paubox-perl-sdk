@@ -15,8 +15,7 @@ sub callToAPIByGet {
         my ($baseUrl, $apiUrl, $authHeader) = @_;
 
         my $client = REST::Client->new();
-        my $headers = {Accept => 'application/json', Authorization => $authHeader};
-        
+        my $headers = {Accept => 'application/json', Authorization => $authHeader};        
         $client->setHost($baseUrl);
         $client->GET(
             $apiUrl,
@@ -39,7 +38,7 @@ sub callToAPIByPost {
         $client->setHost($baseUrl);
         $client->POST(
             $apiUrl,
-            '{data:empty}'
+            $reqBody
         );   
         return $client->responseContent();
 }
