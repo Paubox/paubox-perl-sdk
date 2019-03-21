@@ -4,8 +4,11 @@ package Services::EmailService;
 use warnings;
 use strict;
 
+use lib "lib";
+use lib "extlib/lib/perl5";
 use Services::ApiHelper;
 use Data::Message;
+
 use JSON;
 use Config::General;
 
@@ -25,8 +28,26 @@ sub getEmailDisposition {
     my ($sourceTrackingId) = @_;        
     my $authHeader =  _getAuthHeader() ;
     my $apiUrl = "/message_receipt?sourceTrackingId=" . $sourceTrackingId;    
-    my $response = Services::ApiHelper::callToAPIByGet($baseURL.$apiUser, $apiUrl, $authHeader);
-    print $response;
+    my $sapiResponse = Services::ApiHelper::callToAPIByGet($baseURL.$apiUser, $apiUrl, $authHeader);
+    print $sapiResponse;
+    my $apiResponse = decode_json($sapiResponse);
+    if ($apiResponse->{'data'} == undef && 
+    #$sapiResponse->{'sourceTrackingId'} == undef && 
+    $sapiResponse->{errors} eq undef) {
+            throw $apiResponse;
+          }
+
+        #   if ($apiResponse ne undef && $apiResponse->{data} ne undef && $apiResponse->{data}->{message} ne undef
+        #     && $apiResponse->{data}->{message}->{message_deliveries} ne undef && $apiResponse->{data}->{message}->{message_deliveries}.length > 0) {
+        #         print $apiResponse->{data}->{message}->{message_deliveries};
+
+        #     # for (let $message_deliveries of $apiResponse->{data}->{message}->{message_deliveries}) {
+        #     #   if ($message_deliveries.status.openedStatus == undef) {
+        #     #     $message_deliveries.status.openedStatus = "unopened";
+        #     #   }
+        #     # }
+        #   }
+    print $apiResponse;
 }
 
 sub sendMessage {   
@@ -55,6 +76,7 @@ sub getJSON {
     data => {
         message => {
             recipients => $msg->{'to'},
+            bcc => $msg->{'bcc'},
             headers => {
                 subject => $msg->{'subject'},
                 from => $msg->{'from'},
