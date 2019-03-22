@@ -1,5 +1,8 @@
 
 package Services::EmailService;
+require Exporter;
+@ISA = qw(Exporter);
+@EXPORT = qw(getEmailDisposition, sendMessage);
 
 use warnings;
 use strict;
@@ -11,58 +14,53 @@ use Data::Message;
 
 use JSON;
 use Config::General;
+use Data::Dumper;
+use TryCatch;
 
-my $conf = Config::General->new(
-    -ConfigFile => 'config.cfg',
-    -InterPolateVars => 1
-);
-
-my %config = $conf->getall;
-
+my $apiKey ="";
+my $apiUser="";
 my $baseURL = "https://api.paubox.net:443/v1/";
-my $apiKey = $config{'apiKey'};
-my $apiUser = $config{'apiUsername'};
 
+#
+# Default Constructor
+#
+sub new{    
+    my $this = {};
 
-sub getEmailDisposition {   
-    my ($sourceTrackingId) = @_;        
-    my $authHeader =  _getAuthHeader() ;
-    my $apiUrl = "/message_receipt?sourceTrackingId=" . $sourceTrackingId;    
-    my $sapiResponse = Services::ApiHelper::callToAPIByGet($baseURL.$apiUser, $apiUrl, $authHeader);
-    print $sapiResponse;
-    my $apiResponse = decode_json($sapiResponse);
-    if ($apiResponse->{'data'} == undef && 
-    #$sapiResponse->{'sourceTrackingId'} == undef && 
-    $sapiResponse->{errors} eq undef) {
-            throw $apiResponse;
-          }
+    try{ 
 
-        #   if ($apiResponse ne undef && $apiResponse->{data} ne undef && $apiResponse->{data}->{message} ne undef
-        #     && $apiResponse->{data}->{message}->{message_deliveries} ne undef && $apiResponse->{data}->{message}->{message_deliveries}.length > 0) {
-        #         print $apiResponse->{data}->{message}->{message_deliveries};
+        my $conf = Config::General->new(
+            -ConfigFile => 'config.cfg',
+            -InterPolateVars => 1
+        );
 
-        #     # for (let $message_deliveries of $apiResponse->{data}->{message}->{message_deliveries}) {
-        #     #   if ($message_deliveries.status.openedStatus == undef) {
-        #     #     $message_deliveries.status.openedStatus = "unopened";
-        #     #   }
-        #     # }
-        #   }
-    print $apiResponse;
+        my %config = $conf->getall;
+        if(not defined $config{'apiKey'} or 
+            $config{'apiKey'} eq ""        
+        ) {
+            die "apiKey is missing.";
+        }
+
+        if(not defined $config{'apiUsername'} or 
+            $config{'apiUsername'} eq ""             
+        ) {
+            die "apiUsername is missing.";
+        }
+        
+        $apiKey = $config{'apiKey'};       
+        $apiUser = $config{'apiUsername'};
+
+        bless $this;        
+
+    } catch($err) {
+         die "Error: " .$err;
+    };
+    return $this;  
 }
 
-sub sendMessage {   
-    my ($msgObj) = @_;        
-    my $authHeader =  _getAuthHeader() ;
-    my $apiUrl = "/messages";    
-    # my $JSON = JSON->new->utf8;
-    # $JSON->convert_blessed(1);
-    # my $reqBody = $JSON->encode($msgObj);
-
-    my $reqBody = getJSON($msgObj);
-    
-    my $response = Services::ApiHelper::callToAPIByPost($baseURL.$apiUser, $apiUrl, $authHeader,$reqBody);
-    print $response;
-}
+#
+# Private methods
+#
 
 sub _getAuthHeader {
     return  "Token token=".$apiKey; 
@@ -94,5 +92,74 @@ sub getJSON {
     
     return encode_json (\%reqObject);    
 }
+
+#
+# Public methods
+#
+
+
+#
+# Get Email Disposition
+#
+
+sub getEmailDisposition {       
+    my ($class,$sourceTrackingId) = @_;    
+    my $apiResponseJSON = '';
+    try{               
+        my $authHeader =  _getAuthHeader() ;
+        my $apiUrl = "/message_receipt?sourceTrackingId=" . $sourceTrackingId; 
+        my $apiHelper =  Services::ApiHelper->new();  
+        $apiResponseJSON = $apiHelper->callToAPIByGet($baseURL.$apiUser, $apiUrl, $authHeader);
+
+        # Converting JSON api response to perl
+        my $apiResponsePERL = from_json($apiResponseJSON);        
+
+        if (        
+            ref($apiResponsePERL->{'data'}) ne 'HASH' 
+            && not defined $apiResponsePERL->{'sourceTrackingId'}  
+            && not defined $apiResponsePERL->{'errors'}  
+            && ref($apiResponsePERL->{'errors'}) ne 'ARRAY'  
+        ) 
+        {
+                die $apiResponseJSON;
+        }
+
+        if (defined $apiResponsePERL && defined $apiResponsePERL->{'data'} && defined $apiResponsePERL->{'data'}->{'message'}
+        && defined $apiResponsePERL->{'data'}->{'message'}->{'message_deliveries'} 
+        && (scalar( @{ $apiResponsePERL->{'data'}->{'message'}->{'message_deliveries'} } ) > 0 ) 
+        ) {      
+            foreach my $message_deliveries ( @{ $apiResponsePERL->{'data'}->{'message'}->{'message_deliveries'} } ) {                    
+
+                if($message_deliveries->{'status'}->{'openedStatus'} eq "" ) {  
+
+                    $message_deliveries->{'status'}->{'openedStatus'} = "unopened"; 
+                    # Converting perl api response back to JSON
+                    $apiResponseJSON = to_json($apiResponsePERL);                  
+                }
+            }               
+        }
+    } catch($err) {
+         die $err;
+    };
+    
+        
+    return $apiResponseJSON;
+}
+
+sub sendMessage {   
+    my ($class,$msgObj) = @_;        
+    my $authHeader =  _getAuthHeader() ;
+    my $apiUrl = "/messages";    
+    # my $JSON = JSON->new->utf8;
+    # $JSON->convert_blessed(1);
+    # my $reqBody = $JSON->encode($msgObj);
+
+    my $reqBody = getJSON($msgObj);
+    my $apiHelper =  Services::ApiHelper->new(); 
+    my $response = $apiHelper->callToAPIByPost($baseURL.$apiUser, $apiUrl, $authHeader,$reqBody);
+    print $response;
+}
+
+
 
 1;

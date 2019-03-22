@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/perl -l
 use strict;
 use warnings;
 use lib "lib";
@@ -35,7 +35,10 @@ my $msgObj = new Data::Message(
 
 #print Dumper(\$msgObj);
 
-my $msgResponse = Services::EmailService::sendMessage($msgObj);
-print $msgResponse;
-my $sourceTrackingId ='4a6d68f7-a528-4691-b4d1-82a822ba59bf';
-my $response = Services::EmailService::getEmailDisposition($sourceTrackingId);
+my $sourceTrackingId ="4a6d68f7-a528-4691-b4d1-82a822ba59bf";
+my $service = Services::EmailService->new();
+my $response = $service->getEmailDisposition($sourceTrackingId);
+print $response;
+
+# my $msgResponse = $service->sendMessage($msgObj);
+# print $msgResponse;
