@@ -28,12 +28,12 @@ Once you have an account, follow the instructions on the Rest API dashboard to v
 
 ### Configuring API Credentials
 
-Include your API credentials in your environment file.
+Include your API credentials in "config.cfg" configuration file.
 
 ```bash
-$ echo "API_KEY = YOUR_API_KEY" > config.cfg
-$ echo "API_USERNAME = YOUR_ENDPOINT_NAME" >> config.cfg
-$ echo "config.cfg" >> .gitignore
+echo "API_KEY = YOUR_API_KEY" > config.cfg
+echo "API_USERNAME = YOUR_ENDPOINT_NAME" >> config.cfg
+echo "config.cfg" >> .gitignore
 ```
 
 <a name="#usage"></a>
@@ -129,7 +129,7 @@ print $response;
 <a name="#contributing"></a>
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/paubox/paubox-node.
+Bug reports and pull requests are welcome on GitHub at https://github.com/paubox/paubox-perl-sdk.
 
 
 <a name="#license"></a>
