@@ -11,5 +11,5 @@ WriteMakefile(
         'TryCatch' => 1.003002,        
     }, 
     ABSTRACT_FROM     => 'lib/Paubox_Email_SDK.pm',
-    AUTHOR            => 'Vighnesh <vighneshtrivedi2004@gmail.com>', 
+    AUTHOR            => 'Paubox Inc.',    
 );
