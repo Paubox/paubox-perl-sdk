@@ -19,8 +19,8 @@ sub new {
         'bcc' => [],
         'subject' => '',
         'allowNonTLS' => '' || 0,
-        'plaintext' => '',
-        'htmltext' => '',
+        'text_content' => '',
+        'html_content' => '',
         'attachments' => [], 
     @_ }, $class;
 

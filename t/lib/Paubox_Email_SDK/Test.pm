@@ -148,8 +148,8 @@ sub getSendMessage_TestData() {
                     'bcc' => [$testMsgData -> [2]],
                     'subject' => $testMsgData -> [3],
                     'allowNonTLS' => $testMsgData -> [6] eq "TRUE" ? 1 : 0,
-                    'plaintext' => $testMsgData -> [7],
-                    'htmltext' => $testMsgData -> [8],
+                    'text_content' => $testMsgData -> [7],
+                    'html_content' => $testMsgData -> [8],
                     'attachments' => [@decodedJSONTestAttachments]
                 );
             } 
@@ -162,8 +162,8 @@ sub getSendMessage_TestData() {
                     'bcc' => [$testMsgData -> [2]],
                     'subject' => $testMsgData -> [3],
                     'allowNonTLS' => $testMsgData -> [6] eq "TRUE" ? 1 : 0,
-                    'plaintext' => $testMsgData -> [7],
-                    'htmltext' => $testMsgData -> [8]
+                    'text_content' => $testMsgData -> [7],
+                    'html_content' => $testMsgData -> [8]
                 );
             }
 
