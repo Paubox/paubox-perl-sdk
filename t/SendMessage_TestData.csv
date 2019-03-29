@@ -7,10 +7,10 @@ S.No,Recipient,Bcc,Subject,From,Reply_To,AllowNonTLS ,Text_Plain,Text_Html,Attac
 6,vighneshtrivedi2004@gmail.com,,Test Mail,renee@jongreeley.com,,,Hello Vighnesh,<html><body><h1>Hello World!</h1></body></html>,1,hello_world.txt,text/plain,SG,SUCCESS
 7,vighneshtrivedi2004@gmail.com,,Test Mail,renee@jongreeley.com,,,Hello Vighnesh,<html><body><h1>Hello World!</h1></body></html>,1,hello_world.txt,fg,SGVsbG8gV29ybGQh\n,SUCCESS
 8,,,Test Mail,renee@jongreeley.com,,,Hello Vighnesh,,0,,,,ERROR
-9,vighneshtrivedi2004@gmail.com,,,renee@jongreeley.com,,,Hello Vighnesh,,0,,,,ERROR
+9,vighneshtrivedi2004@gmail.com,,,renee@jongreeley.com,,,Hello Vighnesh,,0,,,,SUCCESS
 10,vighneshtrivedi2004@gmail.com,,Test Mail,,,,Hello Vighnesh,,0,,,,ERROR
 11,vighneshtrivedi2004@gmail.com,,Test Mail 2,renee@jongreeley.com,,,,,0,,,,SUCCESS
-12,vighneshtrivedi2004@gmail.com,,,renee@jongreeley.com,,,,,0,,,,ERROR
+12,vighneshtrivedi2004@gmail.com,,,renee@jongreeley.com,,,,,0,,,,SUCCESS
 13,vighneshtrivedi2004@gmail.com,,,,,,Hello Vighnesh,,0,,,,ERROR
 14,,,Test Mail,,,,Hello Vighnesh,,0,,,,ERROR
 15,,,,,,,,,0,,,,ERROR

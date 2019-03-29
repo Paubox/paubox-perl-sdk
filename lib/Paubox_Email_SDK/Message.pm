@@ -1,7 +1,9 @@
+package Paubox_Email_SDK::Message;
+
 use strict;
 use warnings;
 
-package Data::Message;
+our $VERSION = '1.0';
 
 # constructor
 sub new {

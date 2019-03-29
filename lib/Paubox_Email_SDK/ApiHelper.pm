@@ -1,15 +1,20 @@
-package Services::ApiHelper;
+package Paubox_Email_SDK::ApiHelper;
+
+use strict;
+use warnings;
 
 require Exporter;
-@ISA = qw(Exporter);
-@EXPORT = qw(callToAPIByGet, callToAPIByPost);
+our @ISA = qw(Exporter);
 
-use warnings;
-use strict;
+our @EXPORT_OK = qw(
+                          callToAPIByGet
+                          callToAPIByPost                         
+                  );
+
+our $VERSION = '1.0';
 
 use REST::Client;
 use JSON;
-use Data::Dumper;
 
 #
 # Default Constructor

@@ -1,20 +1,24 @@
+package Paubox_Email_SDK;
 
-package Services::EmailService;
-require Exporter;
-@ISA = qw(Exporter);
-@EXPORT = qw(getEmailDisposition, sendMessage);
-
-use warnings;
 use strict;
+use warnings;
 
-use lib "lib";
-use lib "extlib";
-use Services::ApiHelper;
-use Data::Message;
+require Exporter;
+
+our @ISA = qw(Exporter);
+
+our @EXPORT_OK = qw(
+                          getEmailDisposition
+                          sendMessage                         
+                  );
+
+our $VERSION = '1.0';
+
+use Paubox_Email_SDK::ApiHelper;
+use Paubox_Email_SDK::Message;
 
 use JSON;
 use Config::General;
-use Data::Dumper;
 use TryCatch;
 
 my $apiKey ="";
@@ -25,8 +29,7 @@ my $baseURL = "https://api.paubox.net:443/v1/";
 # Default Constructor
 #
 sub new{    
-    my $this = {};
-
+    my $this = {};    
     try{ 
 
         my $conf = Config::General  ->  new(
@@ -110,7 +113,7 @@ sub getEmailDisposition {
     try{               
         my $authHeader =  _getAuthHeader() ;
         my $apiUrl = "/message_receipt?sourceTrackingId=" . $sourceTrackingId; 
-        my $apiHelper =  Services::ApiHelper -> new();  
+        my $apiHelper =  Paubox_Email_SDK::ApiHelper -> new();  
         $apiResponseJSON = $apiHelper -> callToAPIByGet($baseURL.$apiUser, $apiUrl, $authHeader);
 
         # Converting JSON api response to perl
@@ -159,7 +162,7 @@ sub sendMessage {
 
         my $apiUrl = "/messages";       
         my $reqBody = _convertMsgObjtoJSONReqObj($msgObj);
-        my $apiHelper =  Services::ApiHelper -> new(); 
+        my $apiHelper =  Paubox_Email_SDK::ApiHelper -> new(); 
         $apiResponseJSON = $apiHelper -> callToAPIByPost($baseURL.$apiUser, $apiUrl, _getAuthHeader() , $reqBody);        
 
         # Converting JSON api response to perl
@@ -182,3 +185,54 @@ sub sendMessage {
 }
 
 1;
+__END__
+# Below is stub documentation for your module. You'd better edit it!
+
+=head1 NAME
+
+Paubox_Email_SDK - Perl extension for blah blah blah
+
+=head1 SYNOPSIS
+
+  use Paubox_Email_SDK;
+  blah blah blah
+
+=head1 DESCRIPTION
+
+Stub documentation for Paubox_Email_SDK, created by h2xs. It looks like the
+author of the extension was negligent enough to leave the stub
+unedited.
+
+Blah blah blah.
+
+=head2 EXPORT
+
+None by default.
+
+
+
+=head1 SEE ALSO
+
+Mention other useful documentation such as the documentation of
+related modules or operating system documentation (such as man pages
+in UNIX), or any relevant external documentation such as RFCs or
+standards.
+
+If you have a mailing list set up for your module, mention it here.
+
+If you have a web site set up for your module, mention it here.
+
+=head1 AUTHOR
+
+A. U. Thor, E<lt>a.u.thor@a.galaxy.far.far.awayE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (C) 2019 by A
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself, either Perl version 5.28.1 or,
+at your option, any later version of Perl 5 you may have available.
+
+
+=cut
