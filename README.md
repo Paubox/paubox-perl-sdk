@@ -90,12 +90,16 @@ use warnings;
 use Paubox_Email_SDK;
 
 use JSON;
+use MIME::Base64;
+use String::Util qw(trim);
+
+my $encodedAttachmentContent = trim (encode_base64("Hello! This is the attachment content!") );
 
 my $attachment = '[{
         "fileName": "hello_world.txt",
         "contentType": "text/plain",
-        "content": "SGVsbG8gV29ybGQh\n"
-      }]';
+        "content": "'.$encodedAttachmentContent.
+      '" }]';
 
 my @decoded_json_attachment = @{decode_json($attachment)};
 
