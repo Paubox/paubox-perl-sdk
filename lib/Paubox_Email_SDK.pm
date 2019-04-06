@@ -189,7 +189,7 @@ __END__
 
 =head1 NAME
 
-Paubox_Email_SDK - Perl wrapper for the [Paubox Transactional Email API](https://www.paubox.com/solutions/email-api).
+Paubox_Email_SDK - Perl wrapper for the Paubox Transactional Email API (https://www.paubox.com/solutions/email-api).
 
 =head1 SYNOPSIS
 
@@ -211,13 +211,9 @@ Paubox_Email_SDK - Perl wrapper for the [Paubox Transactional Email API](https:/
 
 =head1 DESCRIPTION
 
-This is the official Perl wrapper for the [Paubox Transactional Email API](https://www.paubox.com/solutions/email-api). It is currently in alpha development.
+This is the official Perl wrapper for the Paubox Transactional Email API (https://www.paubox.com/solutions/email-api). It is currently in alpha development.
 
 The Paubox Transactional Email API allows your application to send secure, HIPAA-compliant email via Paubox and track deliveries and opens. The API wrapper allows you to construct and send messages.
-
-=head2 EXPORT
-
-None by default.
 
 
 =head1 COPYRIGHT AND LICENSE
