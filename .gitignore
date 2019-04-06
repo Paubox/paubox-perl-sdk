@@ -11,6 +11,7 @@
 /tmp/
 /extlib/
 /.vscode/
+/Paubox_Email_SDK-1.0/
 
 # Used by dotenv library to load environment variables.
 # .env
