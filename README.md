@@ -13,7 +13,13 @@ The Paubox Transactional Email API allows your application to send secure, HIPAA
 <a name="#installation"></a>
 ## Installation
 
-We are currently working on getting this module on CPAN. In the meantime, you can install from the included archive.
+If you have App::cpanminus installed, you can install the module from CPAN like this:
+
+```bash
+cpanm Paubox_Email_SDK
+```
+
+Otherwise, you can install from the included archive.
 
 ```bash
 git clone https://github.com/Paubox/paubox-perl-sdk.git
