@@ -19,6 +19,7 @@ sub new {
         'bcc' => [],
         'subject' => '',
         'allowNonTLS' => '' || 0,
+        'forceSecureNotification' => '',
         'text_content' => '',
         'html_content' => '',
         'attachments' => [], 

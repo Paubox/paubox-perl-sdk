@@ -13,7 +13,7 @@ use Text::CSV qw(csv);
 
 sub getEmailDisposition_Success: Tests(2) {
     print "Executing tests for getEmailDisposition_Success:\n";
-    my $sourceTrackingIdSuccessArray = ["4a6d68f7-a528-4691-b4d1-82a822ba59bf", "fb2c76f7-e564-45f8-9f6b-e9fda1b8c4a8"];
+    my $sourceTrackingIdSuccessArray = ["1aed91d1-f7ce-4c3d-8df2-85ecd225a7fc","ce1e2143-474d-43ba-b829-17a26b8005e5"];
     my $service = Paubox_Email_SDK -> new();
     foreach my $sourceTrackingId(@{
         $sourceTrackingIdSuccessArray
@@ -28,7 +28,7 @@ sub getEmailDisposition_Success: Tests(2) {
             && defined $apiResponsePERL -> {'sourceTrackingId'}
         ) {
             is('Success', 'Success', 'Test passed')
-        } else {
+        } else {           
             is('Failure', 'Success', 'Test failed')
         }
     }
@@ -76,7 +76,7 @@ sub sendMessage_Success: Tests {
             && defined $apiResponsePERL -> {'sourceTrackingId'}
         ) {
             is('Success', 'Success', 'Test passed')
-        } else {
+        } else {            
             is('Failure', 'Success', 'Test failed')
         }
     }
@@ -116,11 +116,11 @@ sub getSendMessage_TestData() {
 
             my $msgObj;
             if ($forSuccess) {
-                if ($testMsgData -> [13] ne "SUCCESS") {
+                if ($testMsgData -> [14] ne "SUCCESS") {
                     next;
                 }
             } else {
-                if ($testMsgData -> [13] ne "ERROR") {
+                if ($testMsgData -> [14] ne "ERROR") {
                     next;
                 }
             }
@@ -148,6 +148,7 @@ sub getSendMessage_TestData() {
                     'bcc' => [$testMsgData -> [2]],
                     'subject' => $testMsgData -> [3],
                     'allowNonTLS' => $testMsgData -> [6] eq "TRUE" ? 1 : 0,
+                    'forceSecureNotification' => $testMsgData -> [13],
                     'text_content' => $testMsgData -> [7],
                     'html_content' => $testMsgData -> [8],
                     'attachments' => [@decodedJSONTestAttachments]
@@ -162,6 +163,7 @@ sub getSendMessage_TestData() {
                     'bcc' => [$testMsgData -> [2]],
                     'subject' => $testMsgData -> [3],
                     'allowNonTLS' => $testMsgData -> [6] eq "TRUE" ? 1 : 0,
+                    'forceSecureNotification' => $testMsgData -> [13],
                     'text_content' => $testMsgData -> [7],
                     'html_content' => $testMsgData -> [8]
                 );

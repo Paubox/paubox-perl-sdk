@@ -70,31 +70,79 @@ sub _getAuthHeader {
     return  "Token token=" .$apiKey; 
 }
 
+sub _returnforceSecureNotificationValue {
+    
+    my ($forceSecureNotification) = @_; 
+    my $forceSecureNotificationValue = "";
+
+    if( !defined($forceSecureNotification) || $forceSecureNotification eq "" ) {        
+        return "";
+    }
+    else {
+            $forceSecureNotificationValue = trim ( lc $forceSecureNotification );               
+            if ($forceSecureNotificationValue eq "true") {
+                return 1;
+            } elsif ($forceSecureNotificationValue eq "false") {
+                return 0;
+            } else {
+                return "";
+        }
+    }          
+}
+
 sub _convertMsgObjtoJSONReqObj {
     
     my ($msg) = @_;    
-
-    my %reqObject = (
-    data => {
-        message => {
-            recipients => $msg -> {'to'},
-            bcc => $msg -> {'bcc'},
-            headers => {
-                subject => $msg -> {'subject'},
-                from => $msg -> {'from'},
-                'reply-to' => $msg -> {'replyTo'}
-            },
-            allowNonTLS => $msg -> {'allowNonTLS'},
-            content => {
-                'text/plain' => $msg -> {'text_content'},
-                'text/html' => $msg -> {'html_content'}
-            },
-            attachments => $msg -> {'attachments'},
-        },
-        
-    }           
-    );
     
+    my %reqObject;    
+    my $forceSecureNotification = $msg -> {'forceSecureNotification'};
+    my $forceSecureNotificationValue = _returnforceSecureNotificationValue($forceSecureNotification);       
+
+    if($forceSecureNotificationValue eq "" ) {   
+
+        %reqObject = (
+        data => {
+            message => {
+                recipients => $msg -> {'to'},
+                bcc => $msg -> {'bcc'},
+                headers => {
+                    subject => $msg -> {'subject'},
+                    from => $msg -> {'from'},
+                    'reply-to' => $msg -> {'replyTo'}
+                },
+                allowNonTLS => $msg -> {'allowNonTLS'},                
+                content => {
+                    'text/plain' => $msg -> {'text_content'},
+                    'text/html' => $msg -> {'html_content'}
+                },
+                attachments => $msg -> {'attachments'},
+            },
+            
+        });
+    }
+    else {        
+        
+            %reqObject = (
+            data => {
+                message => {
+                    recipients => $msg -> {'to'},
+                    bcc => $msg -> {'bcc'},
+                    headers => {
+                        subject => $msg -> {'subject'},
+                        from => $msg -> {'from'},
+                        'reply-to' => $msg -> {'replyTo'}
+                    },
+                    allowNonTLS => $msg -> {'allowNonTLS'},
+                    forceSecureNotification => $forceSecureNotificationValue,
+                    content => {
+                        'text/plain' => $msg -> {'text_content'},
+                        'text/html' => $msg -> {'html_content'}
+                    },
+                    attachments => $msg -> {'attachments'},
+                },                
+            });                    
+    }
+        
     return encode_json (\%reqObject);    
 }
 
@@ -163,8 +211,7 @@ sub sendMessage {
         my $apiUrl = "/messages";       
         my $reqBody = _convertMsgObjtoJSONReqObj($msgObj);
         my $apiHelper =  Paubox_Email_SDK::ApiHelper -> new(); 
-        $apiResponseJSON = $apiHelper -> callToAPIByPost($baseURL.$apiUser, $apiUrl, _getAuthHeader() , $reqBody);        
-
+        $apiResponseJSON = $apiHelper -> callToAPIByPost($baseURL.$apiUser, $apiUrl, _getAuthHeader() , $reqBody);                
         # Converting JSON api response to perl
         my $apiResponsePERL = from_json($apiResponseJSON);         
 
