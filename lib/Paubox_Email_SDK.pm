@@ -20,6 +20,8 @@ use Paubox_Email_SDK::Message;
 use JSON;
 use Config::General;
 use TryCatch;
+use String::Util qw(trim);
+use MIME::Base64;
 
 my $apiKey ="";
 my $apiUser="";
@@ -95,9 +97,14 @@ sub _convertMsgObjtoJSONReqObj {
     my ($msg) = @_;    
     
     my %reqObject;    
+    my $encodedHtmlContent = undef;
     my $forceSecureNotification = $msg -> {'forceSecureNotification'};
     my $forceSecureNotificationValue = _returnforceSecureNotificationValue($forceSecureNotification);       
 
+    if ( defined($msg -> {'html_content'}) and $msg -> {'html_content'} ne "" ) {
+        $encodedHtmlContent = trim (encode_base64($msg -> {'html_content'}) );
+    }
+        
     if($forceSecureNotificationValue eq "" ) {   
 
         %reqObject = (
@@ -113,7 +120,7 @@ sub _convertMsgObjtoJSONReqObj {
                 allowNonTLS => $msg -> {'allowNonTLS'},                
                 content => {
                     'text/plain' => $msg -> {'text_content'},
-                    'text/html' => $msg -> {'html_content'}
+                    'text/html' => $encodedHtmlContent
                 },
                 attachments => $msg -> {'attachments'},
             },
@@ -136,7 +143,7 @@ sub _convertMsgObjtoJSONReqObj {
                     forceSecureNotification => $forceSecureNotificationValue,
                     content => {
                         'text/plain' => $msg -> {'text_content'},
-                        'text/html' => $msg -> {'html_content'}
+                        'text/html' => $encodedHtmlContent
                     },
                     attachments => $msg -> {'attachments'},
                 },                
