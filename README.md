@@ -88,6 +88,26 @@ my $messageObj = new Paubox_Email_SDK::Message(
 );
 ```
 
+### Forcing Secure Notifications
+Paubox Secure Notifications allow an extra layer of security, especially when coupled with an organization's requirement for message recipients to use 2-factor authentication to read messages (this setting is available to org administrators in the Paubox Admin Panel).
+
+Instead of receiving an email with the message contents, the recipient will receive a notification email that they have a new message in Paubox.
+
+```perl
+use strict;
+use warnings;
+use Paubox_Email_SDK;
+
+my $messageObj = new Paubox_Email_SDK::Message(
+   'forceSecureNotification' => 'true',	
+   'from' => 'sender@domain.com',   
+   'to' => ['recipient@example.com'],
+   'subject' => 'Testing!',
+   'text_content' => 'Hello World!',
+   'html_content' => '<html><body><h1>Hello World!</h1></body></html>'  
+);
+```
+
 ### Adding Attachments and Additional Headers
 
 ```perl
