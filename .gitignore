@@ -53,3 +53,13 @@ build-iPhoneSimulator/
 .rvmrc
 .vstags
 *.cfg
+
+# ExtUtils::MakeMaker
+/blib/
+/_eumm/
+/*.gz
+/Makefile
+/Makefile.old
+/MANIFEST.bak
+/pm_to_blib
+/*.zip
