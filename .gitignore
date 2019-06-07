@@ -57,7 +57,6 @@ build-iPhoneSimulator/
 # ExtUtils::MakeMaker
 /blib/
 /_eumm/
-/*.gz
 /Makefile
 /Makefile.old
 /MANIFEST.bak
