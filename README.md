@@ -134,6 +134,7 @@ my $messageObj = new Paubox_Email_SDK::Message(
    'replyTo' => 'sender@domain.com', 
    'to' => ['recipient@example.com'],
    'bcc' => ['recipient@example.com'],
+   'cc' => ['recipientcc@example.com'],
    'subject' => 'Testing!',
    'text_content' => 'Hello World!',
    'html_content' => '<html><body><h1>Hello World!</h1></body></html>', 

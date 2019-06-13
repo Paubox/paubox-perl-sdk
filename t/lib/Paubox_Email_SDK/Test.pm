@@ -116,11 +116,11 @@ sub getSendMessage_TestData() {
 
             my $msgObj;
             if ($forSuccess) {
-                if ($testMsgData -> [14] ne "SUCCESS") {
+                if ($testMsgData -> [15] ne "SUCCESS") {
                     next;
                 }
             } else {
-                if ($testMsgData -> [14] ne "ERROR") {
+                if ($testMsgData -> [15] ne "ERROR") {
                     next;
                 }
             }
@@ -145,6 +145,7 @@ sub getSendMessage_TestData() {
                     'from' => $testMsgData -> [4],
                     'replyTo' => $testMsgData -> [5],
                     'to' => [$testMsgData -> [1]],
+                    'cc' => [$testMsgData -> [14]],
                     'bcc' => [$testMsgData -> [2]],
                     'subject' => $testMsgData -> [3],
                     'allowNonTLS' => $testMsgData -> [6] eq "TRUE" ? 1 : 0,
@@ -160,6 +161,7 @@ sub getSendMessage_TestData() {
                     'from' => $testMsgData -> [4],
                     'replyTo' => $testMsgData -> [5],
                     'to' => [$testMsgData -> [1]],
+                    'cc' => [$testMsgData -> [14]],
                     'bcc' => [$testMsgData -> [2]],
                     'subject' => $testMsgData -> [3],
                     'allowNonTLS' => $testMsgData -> [6] eq "TRUE" ? 1 : 0,
