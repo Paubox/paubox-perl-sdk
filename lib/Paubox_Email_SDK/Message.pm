@@ -16,6 +16,7 @@ sub new {
         'from' => '',
         'replyTo' => '',
         'to' => [],
+        'cc' => [],
         'bcc' => [],
         'subject' => '',
         'allowNonTLS' => '' || 0,

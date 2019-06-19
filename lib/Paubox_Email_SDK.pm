@@ -111,6 +111,7 @@ sub _convertMsgObjtoJSONReqObj {
         data => {
             message => {
                 recipients => $msg -> {'to'},
+                cc => $msg -> {'cc'},
                 bcc => $msg -> {'bcc'},
                 headers => {
                     subject => $msg -> {'subject'},
@@ -133,6 +134,7 @@ sub _convertMsgObjtoJSONReqObj {
             data => {
                 message => {
                     recipients => $msg -> {'to'},
+                    cc => $msg -> {'cc'},
                     bcc => $msg -> {'bcc'},
                     headers => {
                         subject => $msg -> {'subject'},
