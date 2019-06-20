@@ -72,3 +72,4 @@ build-iPhoneSimulator/
 *.o
 *.pm.tdy
 *.bs
+t/SendMessage_TestData_*.csv
