@@ -24,7 +24,7 @@ Otherwise, you can install from the included archive.
 ```bash
 git clone https://github.com/Paubox/paubox-perl-sdk.git
 cd paubox-perl-sdk
-cpanm Paubox_Email_SDK-1.1.tar.gz
+cpanm Paubox_Email_SDK-1.2.tar.gz
 ```
 
 ### Getting Paubox API Credentials
