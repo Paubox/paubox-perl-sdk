@@ -19,7 +19,7 @@ use Paubox_Email_SDK::ApiHelper;
 use JSON;
 use TryCatch;
 
-my $formsBaseURL = 'https://next.paubox.com';
+my $formsBaseURL = 'https://apx.paubox.com/forms';
 
 #
 # Default Constructor (no credentials required — Forms API is public)

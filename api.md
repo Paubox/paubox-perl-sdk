@@ -95,7 +95,7 @@ my $response = $service->getEmailDisposition("1aed91d1-f7ce-4c3d-8df2-85ecd225a7
 ## Forms API
 
 **Module:** `Paubox_Forms_SDK`  
-**Base URL:** `https://next.paubox.com`  
+**Base URL:** `https://apx.paubox.com/forms`  
 **Authentication:** None — all Forms API endpoints are public.
 
 ---

@@ -71,7 +71,7 @@ make test
 - Methods: `sendMessage`, `getEmailDisposition`
 
 ### Forms API (`Paubox_Forms_SDK`)
-- Base URL: `https://next.paubox.com`
+- Base URL: `https://apx.paubox.com/forms`
 - Auth: None (public endpoints)
 - Methods: `getForm`, `submitForm`
 
