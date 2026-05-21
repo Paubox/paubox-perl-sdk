@@ -8,10 +8,10 @@ our @ISA = qw(Exporter);
 
 our @EXPORT_OK = qw(
                           callToAPIByGet
-                          callToAPIByPost                         
+                          callToAPIByPost
                   );
 
-our $VERSION = '1.2';
+our $VERSION = '1.3';
 
 use REST::Client;
 use JSON;
@@ -32,7 +32,7 @@ sub callToAPIByGet {
     my $client = REST::Client -> new();
 
     $client -> addHeader('Content-Type', 'application/json');
-    $client -> addHeader('Authorization', $authHeader);
+    $client -> addHeader('Authorization', $authHeader) if $authHeader;
 
     $client -> setHost($baseUrl);
     $client -> GET(
@@ -48,14 +48,14 @@ sub callToAPIByPost {
     my $client = REST::Client -> new();
 
     $client -> addHeader('Content-Type', 'application/json');
-    $client -> addHeader('Authorization', $authHeader);
+    $client -> addHeader('Authorization', $authHeader) if $authHeader;
     $client -> addHeader('Accept', 'application/json');
 
     $client -> setHost($baseUrl);
     $client -> POST(
         $apiUrl,
         $reqBody
-    );    
+    );
     return $client -> responseContent();
 }
 

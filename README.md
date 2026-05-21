@@ -8,9 +8,11 @@ The Paubox Email API allows your application to send secure, HIPAA compliant ema
 
 # Table of Contents
 * [Installation](#installation)
-*  [Usage](#usage)
-*  [Contributing](#contributing)
-*  [License](#license)
+* [Usage](#usage)
+  * [Email API](#email-api)
+  * [Forms API](#forms-api)
+* [Contributing](#contributing)
+* [License](#license)
 
 <a name="#installation"></a>
 ## Installation
@@ -46,6 +48,9 @@ echo "config.cfg" >> .gitignore
 
 <a name="#usage"></a>
 ## Usage
+
+<a name="#email-api"></a>
+### Email API
 
 To send an email, prepare a Message object and call the sendMessage method of Paubox_Email_SDK.
 
@@ -157,6 +162,64 @@ use Paubox_Email_SDK;
 my $service = Paubox_Email_SDK -> new();
 my $response = $service -> getEmailDisposition("SOURCE_TRACKING_ID");
 print $response;
+```
+
+<a name="#forms-api"></a>
+### Forms API
+
+The Paubox Forms API lets you retrieve form definitions and submit responses. These
+endpoints are **public** — no API key or `config.cfg` is required.
+
+#### Retrieving a form
+
+```perl
+use strict;
+use warnings;
+use Paubox_Forms_SDK;
+
+my $forms = Paubox_Forms_SDK->new();
+my $response = $forms->getForm("your-form-uuid");
+print $response;
+# Returns JSON with id, title, form_html, form_json, form_css, etc.
+```
+
+#### Submitting a form response
+
+```perl
+use strict;
+use warnings;
+use Paubox_Forms_SDK;
+
+my $forms = Paubox_Forms_SDK->new();
+my $response = $forms->submitForm(
+    "your-form-uuid",
+    { first_name => "Jane", last_name => "Doe", email => "jane\@example.com" }
+);
+# Returns empty body on success (HTTP 201)
+```
+
+#### Submitting a form response with attachments
+
+Attachments must be base64-encoded. The maximum total request size is 250 MB.
+
+```perl
+use strict;
+use warnings;
+use Paubox_Forms_SDK;
+use MIME::Base64;
+
+my $forms = Paubox_Forms_SDK->new();
+
+open(my $fh, '<:raw', 'consent.pdf') or die "Cannot open file: $!";
+local $/;
+my $encoded = encode_base64(<$fh>);
+close($fh);
+
+my $response = $forms->submitForm(
+    "your-form-uuid",
+    { first_name => "Jane", signature => "{signature_field}" },
+    [ { name => "consent.pdf", content => $encoded } ]
+);
 ```
 
 <a name="#contributing"></a>
