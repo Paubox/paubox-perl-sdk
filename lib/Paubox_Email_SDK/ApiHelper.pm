@@ -14,7 +14,6 @@ our @EXPORT_OK = qw(
 our $VERSION = '1.3';
 
 use REST::Client;
-use JSON;
 
 #
 # Default Constructor
