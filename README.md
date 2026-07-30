@@ -11,6 +11,7 @@ The Paubox Email API allows your application to send secure, HIPAA compliant ema
 * [Usage](#usage)
   * [Email API](#email-api)
   * [Forms API](#forms-api)
+* [Running Tests](#running-tests)
 * [Contributing](#contributing)
 * [License](#license)
 
@@ -230,6 +231,28 @@ my $response = $forms->submitForm(
     [ { name => "consent.pdf", content => $encoded } ]
 );
 ```
+
+<a name="#running-tests"></a>
+## Running Tests
+
+```bash
+perl Makefile.PL
+make test
+```
+
+Be aware of what the suites actually are before you run them:
+
+* `t/lib/Paubox_Email_SDK/Test.pm` (loaded by `t/Paubox_Email_SDK.t`) is a
+  **live-integration** suite. It needs a valid `config.cfg`, makes real calls
+  to `api.paubox.net`, sends real email, and checks source tracking IDs
+  hardcoded from 2019, so it does not pass out of the box.
+* `t/lib/Paubox_Forms_SDK/Test.pm` is also live-integration and is
+  intentionally **not** wired into the runner. Its `$VALID_FORM_UUID` is a
+  placeholder you must replace with a real form UUID. Run it directly with
+  `perl -Ilib -It/lib -MPaubox_Forms_SDK::Test -e 'Test::Class->runtests'`.
+* `t/convertMsgObjtoJSONReqObj.t` is the offline unit test: no credentials, no
+  network. It runs anywhere, and skips cleanly if the CPAN dependencies are
+  not installed.
 
 <a name="#contributing"></a>
 ## Contributing

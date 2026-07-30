@@ -1,3 +1,23 @@
+#
+# MANUAL LIVE-INTEGRATION SUITE -- NOT RUN BY `make test`.
+#
+# This class is deliberately NOT loaded by t/Paubox_Email_SDK.t, because:
+#
+#   - Every test here makes real network calls against
+#     https://apx.paubox.com/forms . There are no mocks or fixtures.
+#   - $VALID_FORM_UUID below is a placeholder. Until it is replaced with a
+#     real form UUID from your own Paubox account, getForm_Success and
+#     submitForm_Success fail 100% of the time.
+#   - submitForm_Success creates a real form submission on the form you
+#     point it at.
+#
+# To run it, edit $VALID_FORM_UUID and then invoke it directly:
+#
+#   perl -Ilib -It/lib -MPaubox_Forms_SDK::Test -e 'Test::Class->runtests'
+#
+# For a test that runs anywhere with no network and no credentials, see
+# t/convertMsgObjtoJSONReqObj.t .
+#
 package Paubox_Forms_SDK::Test;
 use strict;
 use warnings;
@@ -87,8 +107,11 @@ sub submitForm_Failure: Tests(1) {
 
     my $forms = Paubox_Forms_SDK->new();
 
-    # Missing formId should die
-    my $response = eval { $forms->getForm("") };
+    # Missing formId should die. This guard fires before any HTTP request,
+    # so this particular test needs no network access.
+    my $response = eval {
+        $forms->submitForm( "", { first_name => "Jane" } );
+    };
 
     if ($@) {
         is('Success', 'Success', 'Test passed: got expected error for empty formId');

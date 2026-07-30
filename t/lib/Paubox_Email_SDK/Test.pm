@@ -1,3 +1,28 @@
+#
+# LIVE-INTEGRATION SUITE -- requires credentials and network access.
+#
+# This is the class loaded by t/Paubox_Email_SDK.t, so `make test` runs it.
+# It is not a self-contained unit test suite:
+#
+#   - Every test calls Paubox_Email_SDK -> new(), which reads config.cfg from
+#     the current working directory. Without a valid config.cfg the whole
+#     suite dies with "apiKey is missing."
+#   - Every test makes real HTTP calls to https://api.paubox.net , and
+#     sendMessage_Success sends real email.
+#   - getEmailDisposition_Success hardcodes source tracking IDs from 2019
+#     that only exist under the Paubox account they were generated on, so it
+#     fails for everyone else.
+#   - The sendMessage tests are driven by t/SendMessage_TestData.csv, whose
+#     from/to addresses must be changed to addresses on your own verified
+#     domain.
+#
+# To run it directly:
+#
+#   perl -Ilib -It/lib -MPaubox_Email_SDK::Test -e 'Test::Class->runtests'
+#
+# For a test that runs anywhere with no network and no credentials, see
+# t/convertMsgObjtoJSONReqObj.t .
+#
 package Paubox_Email_SDK::Test;
 use strict;
 use warnings;
