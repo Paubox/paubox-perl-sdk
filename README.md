@@ -23,13 +23,19 @@ If you have App::cpanminus installed, you can install the module from CPAN like 
 cpanm Paubox_Email_SDK
 ```
 
-Otherwise, you can install from the included archive.
+Otherwise, you can build and install from source.
 
 ```bash
 git clone https://github.com/Paubox/paubox-perl-sdk.git
 cd paubox-perl-sdk
-cpanm Paubox_Email_SDK-1.2.tar.gz
+cpanm --installdeps .
+perl Makefile.PL
+make
+make install
 ```
+
+If you have App::cpanminus, `cpanm .` from inside the checkout does all of the
+above in one step.
 
 ### Getting Paubox API Credentials
 You will need to have a Paubox account. You can [sign up here](https://www.paubox.com/join/see-pricing?unit=messages).

@@ -9,6 +9,15 @@ Unreleased
       written per the docs made new() die with "apiKey is missing."
       Documentation updated to be self-consistent.
 
+    - Removed the stale Paubox_Email_SDK-1.2.tar.gz build artifact that was
+      checked into the repository and pointed at by README.md as an install
+      path. README.md now documents building from source, and *.tar.gz is
+      git-ignored.
+
+    - Added lib/Paubox_Forms_SDK.pm to MANIFEST; `make dist` would otherwise
+      have produced a release with no Forms module. Also added the t/ test
+      files, cpanfile and api.md to MANIFEST.
+
 1.3 2024-01-01
 
     - Added Paubox_Forms_SDK module with getForm and submitForm methods.
