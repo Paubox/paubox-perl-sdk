@@ -41,10 +41,13 @@ Once you have an account, follow the instructions on the Rest API dashboard to v
 Include your API credentials in "config.cfg" configuration file.
 
 ```bash
-echo "API_KEY = YOUR_API_KEY" > config.cfg
-echo "API_USERNAME = YOUR_ENDPOINT_NAME" >> config.cfg
+echo "apiKey = YOUR_API_KEY" > config.cfg
+echo "apiUsername = YOUR_ENDPOINT_NAME" >> config.cfg
 echo "config.cfg" >> .gitignore
 ```
+
+The `API_KEY` / `API_USERNAME` spellings are also accepted, so an existing
+`config.cfg` using either form will keep working.
 
 <a name="#usage"></a>
 ## Usage
