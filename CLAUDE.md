@@ -42,9 +42,11 @@ cpanm Test::Class Test::More Text::CSV
 Create `config.cfg` in the project root:
 
 ```
-API_KEY = YOUR_API_KEY
-API_USERNAME = YOUR_ENDPOINT_NAME
+apiKey = YOUR_API_KEY
+apiUsername = YOUR_ENDPOINT_NAME
 ```
+
+`API_KEY` / `API_USERNAME` are also accepted (`apiKey` / `apiUsername` win if both are present).
 
 The Forms API is public and does not require credentials.
 

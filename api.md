@@ -13,9 +13,12 @@
 Loads `apiKey` and `apiUsername` from `config.cfg` in the current working directory.
 
 ```
-API_KEY = YOUR_API_KEY
-API_USERNAME = YOUR_ENDPOINT_NAME
+apiKey = YOUR_API_KEY
+apiUsername = YOUR_ENDPOINT_NAME
 ```
+
+The `API_KEY` / `API_USERNAME` spellings are also accepted; `apiKey` /
+`apiUsername` take precedence if both are present.
 
 Dies with an error message if either credential is missing.
 

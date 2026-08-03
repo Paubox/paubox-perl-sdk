@@ -40,21 +40,28 @@ sub new{
         );
 
         my %config = $conf -> getall;
-        if(not defined $config{'apiKey'} or 
-            $config{'apiKey'} eq ""        
+
+        # Accept either the canonical 'apiKey' / 'apiUsername' keys or the
+        # 'API_KEY' / 'API_USERNAME' spellings. Config::General is case
+        # sensitive here, so both have to be looked up explicitly.
+        my $configApiKey = defined $config{'apiKey'} ? $config{'apiKey'} : $config{'API_KEY'};
+        my $configApiUser = defined $config{'apiUsername'} ? $config{'apiUsername'} : $config{'API_USERNAME'};
+
+        if(not defined $configApiKey or
+            $configApiKey eq ""
         ) {
             die "apiKey is missing.";
         }
 
         if(
-            not defined $config{'apiUsername'} or 
-            $config{'apiUsername'} eq ""             
+            not defined $configApiUser or
+            $configApiUser eq ""
         ) {
             die "apiUsername is missing.";
         }
-        
-        $apiKey = $config{'apiKey'};       
-        $apiUser = $config{'apiUsername'};
+
+        $apiKey = $configApiKey;
+        $apiUser = $configApiUser;
 
         bless $this;        
 
@@ -105,54 +112,35 @@ sub _convertMsgObjtoJSONReqObj {
         $encodedHtmlContent = trim (encode_base64($msg -> {'html_content'}) );
     }
         
-    if($forceSecureNotificationValue eq "" ) {   
-
-        %reqObject = (
-        data => {
-            message => {
-                recipients => $msg -> {'to'},
-                cc => $msg -> {'cc'},
-                bcc => $msg -> {'bcc'},
-                headers => {
-                    subject => $msg -> {'subject'},
-                    from => $msg -> {'from'},
-                    'reply-to' => $msg -> {'replyTo'}
-                },
-                allowNonTLS => $msg -> {'allowNonTLS'},                
-                content => {
-                    'text/plain' => $msg -> {'text_content'},
-                    'text/html' => $encodedHtmlContent
-                },
-                attachments => $msg -> {'attachments'},
+    %reqObject = (
+    data => {
+        message => {
+            recipients => $msg -> {'to'},
+            cc => $msg -> {'cc'},
+            bcc => $msg -> {'bcc'},
+            headers => {
+                subject => $msg -> {'subject'},
+                from => $msg -> {'from'},
+                'reply-to' => $msg -> {'replyTo'}
             },
-            
-        });
+            allowNonTLS => $msg -> {'allowNonTLS'},
+            content => {
+                'text/plain' => $msg -> {'text_content'},
+                'text/html' => $encodedHtmlContent
+            },
+            attachments => $msg -> {'attachments'},
+        },
+
+    });
+
+    # Only send forceSecureNotification when it was explicitly set to true or
+    # false. When unset the key must be absent from the JSON entirely -- not
+    # null, not "".
+    if ( $forceSecureNotificationValue ne "" ) {
+        $reqObject{'data'}{'message'}{'forceSecureNotification'} = $forceSecureNotificationValue;
     }
-    else {        
-        
-            %reqObject = (
-            data => {
-                message => {
-                    recipients => $msg -> {'to'},
-                    cc => $msg -> {'cc'},
-                    bcc => $msg -> {'bcc'},
-                    headers => {
-                        subject => $msg -> {'subject'},
-                        from => $msg -> {'from'},
-                        'reply-to' => $msg -> {'replyTo'}
-                    },
-                    allowNonTLS => $msg -> {'allowNonTLS'},
-                    forceSecureNotification => $forceSecureNotificationValue,
-                    content => {
-                        'text/plain' => $msg -> {'text_content'},
-                        'text/html' => $encodedHtmlContent
-                    },
-                    attachments => $msg -> {'attachments'},
-                },                
-            });                    
-    }
-        
-    return encode_json (\%reqObject);    
+
+    return encode_json (\%reqObject);
 }
 
 #

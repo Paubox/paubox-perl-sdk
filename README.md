@@ -11,6 +11,7 @@ The Paubox Email API allows your application to send secure, HIPAA compliant ema
 * [Usage](#usage)
   * [Email API](#email-api)
   * [Forms API](#forms-api)
+* [Running Tests](#running-tests)
 * [Contributing](#contributing)
 * [License](#license)
 
@@ -23,13 +24,19 @@ If you have App::cpanminus installed, you can install the module from CPAN like 
 cpanm Paubox_Email_SDK
 ```
 
-Otherwise, you can install from the included archive.
+Otherwise, you can build and install from source.
 
 ```bash
 git clone https://github.com/Paubox/paubox-perl-sdk.git
 cd paubox-perl-sdk
-cpanm Paubox_Email_SDK-1.2.tar.gz
+cpanm --installdeps .
+perl Makefile.PL
+make
+make install
 ```
+
+If you have App::cpanminus, `cpanm .` from inside the checkout does all of the
+above in one step.
 
 ### Getting Paubox API Credentials
 You will need to have a Paubox account. You can [sign up here](https://www.paubox.com/join/see-pricing?unit=messages).
@@ -41,10 +48,13 @@ Once you have an account, follow the instructions on the Rest API dashboard to v
 Include your API credentials in "config.cfg" configuration file.
 
 ```bash
-echo "API_KEY = YOUR_API_KEY" > config.cfg
-echo "API_USERNAME = YOUR_ENDPOINT_NAME" >> config.cfg
+echo "apiKey = YOUR_API_KEY" > config.cfg
+echo "apiUsername = YOUR_ENDPOINT_NAME" >> config.cfg
 echo "config.cfg" >> .gitignore
 ```
+
+The `API_KEY` / `API_USERNAME` spellings are also accepted, so an existing
+`config.cfg` using either form will keep working.
 
 <a name="#usage"></a>
 ## Usage
@@ -221,6 +231,28 @@ my $response = $forms->submitForm(
     [ { name => "consent.pdf", content => $encoded } ]
 );
 ```
+
+<a name="#running-tests"></a>
+## Running Tests
+
+```bash
+perl Makefile.PL
+make test
+```
+
+Be aware of what the suites actually are before you run them:
+
+* `t/lib/Paubox_Email_SDK/Test.pm` (loaded by `t/Paubox_Email_SDK.t`) is a
+  **live-integration** suite. It needs a valid `config.cfg`, makes real calls
+  to `api.paubox.net`, sends real email, and checks source tracking IDs
+  hardcoded from 2019, so it does not pass out of the box.
+* `t/lib/Paubox_Forms_SDK/Test.pm` is also live-integration and is
+  intentionally **not** wired into the runner. Its `$VALID_FORM_UUID` is a
+  placeholder you must replace with a real form UUID. Run it directly with
+  `perl -Ilib -It/lib -MPaubox_Forms_SDK::Test -e 'Test::Class->runtests'`.
+* `t/convertMsgObjtoJSONReqObj.t` is the offline unit test: no credentials, no
+  network. It runs anywhere, and skips cleanly if the CPAN dependencies are
+  not installed.
 
 <a name="#contributing"></a>
 ## Contributing
