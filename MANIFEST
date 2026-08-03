@@ -12,6 +12,7 @@ META.yml                                 Module YAML meta-data (added by MakeMak
 META.json                                Module JSON meta-data (added by MakeMaker)
 CHANGES
 t/Paubox_Email_SDK.t
+t/convertMsgObjtoJSONReqObj.t
 t/SendMessage_TestData.csv
 t/lib/Paubox_Email_SDK/Test.pm
 t/lib/Paubox_Forms_SDK/Test.pm

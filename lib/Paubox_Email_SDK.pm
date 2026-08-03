@@ -112,54 +112,35 @@ sub _convertMsgObjtoJSONReqObj {
         $encodedHtmlContent = trim (encode_base64($msg -> {'html_content'}) );
     }
         
-    if($forceSecureNotificationValue eq "" ) {   
-
-        %reqObject = (
-        data => {
-            message => {
-                recipients => $msg -> {'to'},
-                cc => $msg -> {'cc'},
-                bcc => $msg -> {'bcc'},
-                headers => {
-                    subject => $msg -> {'subject'},
-                    from => $msg -> {'from'},
-                    'reply-to' => $msg -> {'replyTo'}
-                },
-                allowNonTLS => $msg -> {'allowNonTLS'},                
-                content => {
-                    'text/plain' => $msg -> {'text_content'},
-                    'text/html' => $encodedHtmlContent
-                },
-                attachments => $msg -> {'attachments'},
+    %reqObject = (
+    data => {
+        message => {
+            recipients => $msg -> {'to'},
+            cc => $msg -> {'cc'},
+            bcc => $msg -> {'bcc'},
+            headers => {
+                subject => $msg -> {'subject'},
+                from => $msg -> {'from'},
+                'reply-to' => $msg -> {'replyTo'}
             },
-            
-        });
+            allowNonTLS => $msg -> {'allowNonTLS'},
+            content => {
+                'text/plain' => $msg -> {'text_content'},
+                'text/html' => $encodedHtmlContent
+            },
+            attachments => $msg -> {'attachments'},
+        },
+
+    });
+
+    # Only send forceSecureNotification when it was explicitly set to true or
+    # false. When unset the key must be absent from the JSON entirely -- not
+    # null, not "".
+    if ( $forceSecureNotificationValue ne "" ) {
+        $reqObject{'data'}{'message'}{'forceSecureNotification'} = $forceSecureNotificationValue;
     }
-    else {        
-        
-            %reqObject = (
-            data => {
-                message => {
-                    recipients => $msg -> {'to'},
-                    cc => $msg -> {'cc'},
-                    bcc => $msg -> {'bcc'},
-                    headers => {
-                        subject => $msg -> {'subject'},
-                        from => $msg -> {'from'},
-                        'reply-to' => $msg -> {'replyTo'}
-                    },
-                    allowNonTLS => $msg -> {'allowNonTLS'},
-                    forceSecureNotification => $forceSecureNotificationValue,
-                    content => {
-                        'text/plain' => $msg -> {'text_content'},
-                        'text/html' => $encodedHtmlContent
-                    },
-                    attachments => $msg -> {'attachments'},
-                },                
-            });                    
-    }
-        
-    return encode_json (\%reqObject);    
+
+    return encode_json (\%reqObject);
 }
 
 #

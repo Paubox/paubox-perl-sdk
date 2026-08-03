@@ -150,7 +150,20 @@ sub getSendMessage_TestData() {
                 }
             }
 
-            if ($testMsgData -> [9] > 0) # if testdata file has attachments 
+            my %msgArgs = (
+                'from' => $testMsgData -> [4],
+                'replyTo' => $testMsgData -> [5],
+                'to' => [$testMsgData -> [1]],
+                'cc' => [$testMsgData -> [14]],
+                'bcc' => [$testMsgData -> [2]],
+                'subject' => $testMsgData -> [3],
+                'allowNonTLS' => $testMsgData -> [6] eq "TRUE" ? 1 : 0,
+                'forceSecureNotification' => $testMsgData -> [13],
+                'text_content' => $testMsgData -> [7],
+                'html_content' => $testMsgData -> [8]
+            );
+
+            if ($testMsgData -> [9] > 0) # if testdata file has attachments
             {
                 my $testAttachments = '[{
                 "fileName": "'. $testMsgData->[10]
@@ -160,41 +173,18 @@ sub getSendMessage_TestData() {
                 '", "content":"'.$testMsgData -> [12].
                 '"}
                 ]
-                ';   
+                ';
 
                 my @decodedJSONTestAttachments = @ {
                     decode_json($testAttachments)
                 };
 
-                $msgObj = new Paubox_Email_SDK::Message(
-                    'from' => $testMsgData -> [4],
-                    'replyTo' => $testMsgData -> [5],
-                    'to' => [$testMsgData -> [1]],
-                    'cc' => [$testMsgData -> [14]],
-                    'bcc' => [$testMsgData -> [2]],
-                    'subject' => $testMsgData -> [3],
-                    'allowNonTLS' => $testMsgData -> [6] eq "TRUE" ? 1 : 0,
-                    'forceSecureNotification' => $testMsgData -> [13],
-                    'text_content' => $testMsgData -> [7],
-                    'html_content' => $testMsgData -> [8],
-                    'attachments' => [@decodedJSONTestAttachments]
-                );
-            } 
-            else # creating msg object without attachments 
-            {
-                $msgObj = new Paubox_Email_SDK::Message(
-                    'from' => $testMsgData -> [4],
-                    'replyTo' => $testMsgData -> [5],
-                    'to' => [$testMsgData -> [1]],
-                    'cc' => [$testMsgData -> [14]],
-                    'bcc' => [$testMsgData -> [2]],
-                    'subject' => $testMsgData -> [3],
-                    'allowNonTLS' => $testMsgData -> [6] eq "TRUE" ? 1 : 0,
-                    'forceSecureNotification' => $testMsgData -> [13],
-                    'text_content' => $testMsgData -> [7],
-                    'html_content' => $testMsgData -> [8]
-                );
+                $msgArgs{'attachments'} = [@decodedJSONTestAttachments];
             }
+            # Without attachments Message::new supplies its own
+            # 'attachments' => [] default, so nothing is needed here.
+
+            $msgObj = new Paubox_Email_SDK::Message(%msgArgs);
 
             push(@{ $arrMessages }, $msgObj);
 
